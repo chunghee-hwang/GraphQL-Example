@@ -62,18 +62,6 @@ public class PostService {
         return result;
     }
 
-    @GraphQLMutation(name = "deleteAllPosts")
-    public boolean deleteAllPosts() {
-        boolean result;
-        try {
-            postRepository.deleteAll();
-            result = true;
-        } catch (Exception e) {
-            result = false;
-        }
-        return result;
-    }
-
     /*
      * { post(id:1){ title isGood } }
      */

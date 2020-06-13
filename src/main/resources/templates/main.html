@@ -16,17 +16,6 @@
     </ul>
     <script>
         addEventListener("load", e => {
-            /*
-            fetchGraphQL(`{ posts{id title} }`, res => {
-                console.log(res);
-            });
-            fetchGraphQL(`{ post(id:541){id title} }`, res => {
-                console.log(res);
-            });
-            fetchGraphQL(`mutation{ savePost(post:{title:"asdfwer"}){ id title } }`, res => {
-                console.log(res);
-            });
-            */
             getAllPosts();
         })
 
@@ -72,12 +61,33 @@
             });
         }
 
+        updatePost = (submit_input) => {
+            let id = submit_input.form.id.value;
+            let title = submit_input.form.title.value;
+            if (!id) return;
+            if (!title) {
+                alert('내용을 입력해주세요.')
+                return;
+            }
+            fetchGraphQL(`mutation{ savePost(post:{id:"${id}",title:"${title}"}){ id title } }`, res => {
+                if (res && res.data && res.data.savePost) {
+                    document.querySelector(`#post${id}`).innerHTML = postTemplate(res.data.savePost);
+                    alert('수정 완료!')
+                } else {
+                    alert('수정 실패!')
+                }
+            });
+        }
+
         postTemplate = (post) => {
             return `
                     <li id="post${post.id}">
-                        id: ${post.id}<br>
-                        title: ${post.title}
-                        <button data-id="${post.id}" onclick="deletePost(this);">삭제</button>
+                        <form onsubmit="return false">
+                            id: <input type="text" name="id" value="${post.id}" readonly><br>
+                            title: <input type="text" name="title" value="${post.title}" placeholder="내용 입력"><br>
+                            <input type="submit" onclick="updatePost(this)" value="수정">
+                            <button data-id="${post.id}" onclick="deletePost(this);">삭제</button>
+                        </form>
                         <hr />
                     </li>
                     `
