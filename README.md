@@ -6,5 +6,5 @@ SpringBoot, GraphQL, MySQL을 이용한 예제<br><br>
 
 ## 스크린샷
 <p align="center">
-    <img src="./screenshot/screenshot/main_page.png" />
+    <img src="./screenshot/main_page.png" />
 </p>
