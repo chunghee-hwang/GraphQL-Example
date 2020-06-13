@@ -10,14 +10,14 @@
     <h1>GraphQL Test</h1>
     <form onsubmit="return false">
         <input type="text" name="title" placeholder="내용 입력">
-        <input type="submit" onclick="savePost(this)">
+        <input type="submit" onclick="savePost(this);">
     </form>
     <ul class="posts">
     </ul>
     <script>
         addEventListener("load", e => {
             getAllPosts();
-        })
+        });
 
         fetchGraphQL = (query, callback) => {
             let opts = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) };
@@ -27,7 +27,7 @@
         savePost = (submit_input) => {
             let title = submit_input.form.title.value;
             if (!title) {
-                alert('내용을 입력해주세요.')
+                alert('내용을 입력해주세요.');
                 return;
             }
             fetchGraphQL(`mutation{ savePost(post:{title:"${title}"}){ id title } }`, res => {
@@ -66,7 +66,7 @@
             let title = submit_input.form.title.value;
             if (!id) return;
             if (!title) {
-                alert('내용을 입력해주세요.')
+                alert('내용을 입력해주세요.');
                 return;
             }
             fetchGraphQL(`mutation{ savePost(post:{id:"${id}",title:"${title}"}){ id title } }`, res => {
@@ -85,7 +85,7 @@
                         <form onsubmit="return false">
                             id: <input type="text" name="id" value="${post.id}" readonly><br>
                             title: <input type="text" name="title" value="${post.title}" placeholder="내용 입력"><br>
-                            <input type="submit" onclick="updatePost(this)" value="수정">
+                            <input type="submit" onclick="updatePost(this);" value="수정">
                             <button data-id="${post.id}" onclick="deletePost(this);">삭제</button>
                         </form>
                         <hr />
