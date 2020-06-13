@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.goodperson.graphql.model.Post;
 import com.goodperson.graphql.repository.PostRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.leangen.graphql.annotations.GraphQLContext;
@@ -25,7 +24,7 @@ public class PostService {
     }
 
     /*
-     * { post{ id title } }
+     * { posts{ id title } }
      */
     @GraphQLQuery(name = "posts")
     public List<Post> getPosts() {
@@ -49,15 +48,34 @@ public class PostService {
     }
 
     /*
-     * mutation{ deletePost(id:1) }
+     * mutation { deletePost(id:1) }
      */
     @GraphQLMutation(name = "deletePost")
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
+    public boolean deletePost(Long id) {
+        boolean result;
+        try {
+            postRepository.deleteById(id);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+    }
+
+    @GraphQLMutation(name = "deleteAllPosts")
+    public boolean deleteAllPosts() {
+        boolean result;
+        try {
+            postRepository.deleteAll();
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
     }
 
     /*
-     * { post{ title isGood } }
+     * { post(id:1){ title isGood } }
      */
     @GraphQLQuery(name = "isGood")
     public boolean isGood(@GraphQLContext Post post) {

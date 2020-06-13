@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GraphQL Test</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>GraphQL Test</h1>
+    <ul class="posts">
+    </ul>
+    <script>
+        addEventListener("load", e => {
+            console.log(e);
+            fetchGraphQL(`{ posts{id title} }`, res => {
+                console.log(res);
+            });
+            fetchGraphQL(`mutation{ savePost(post:{title:"asdfwer"}){ id title } }`, res => {
+                console.log(res);
+            });
+        })
+        fetchGraphQL = (query, callback) => {
+            let opts = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) };
+            fetch("/graphql", opts).then(res => res.json()).then(json => callback(json)).catch(err => callback(err));
+        }
+    </script>
+</body>
+
+</html>
