@@ -8,22 +8,82 @@
 
 <body>
     <h1>GraphQL Test</h1>
+    <form onsubmit="return false">
+        <input type="text" name="title" placeholder="내용 입력">
+        <input type="submit" onclick="savePost(this)">
+    </form>
     <ul class="posts">
     </ul>
     <script>
         addEventListener("load", e => {
-            console.log(e);
+            /*
             fetchGraphQL(`{ posts{id title} }`, res => {
+                console.log(res);
+            });
+            fetchGraphQL(`{ post(id:541){id title} }`, res => {
                 console.log(res);
             });
             fetchGraphQL(`mutation{ savePost(post:{title:"asdfwer"}){ id title } }`, res => {
                 console.log(res);
             });
+            */
+            getAllPosts();
         })
+
         fetchGraphQL = (query, callback) => {
             let opts = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) };
             fetch("/graphql", opts).then(res => res.json()).then(json => callback(json)).catch(err => callback(err));
         }
+
+        savePost = (submit_input) => {
+            let title = submit_input.form.title.value;
+            if (!title) {
+                alert('내용을 입력해주세요.')
+                return;
+            }
+            fetchGraphQL(`mutation{ savePost(post:{title:"${title}"}){ id title } }`, res => {
+                if (res && res.data && res.data.savePost) {
+                    document.querySelector(".posts").innerHTML += postTemplate(res.data.savePost);
+                    submit_input.form.reset();
+                }
+            });
+        }
+
+        getAllPosts = () => {
+            fetchGraphQL(`{ posts{id title} }`, res => {
+                if (res && res.data && res.data.posts) {
+                    post_lists =
+                        res.data.posts.reduce((accumulator, post) => {
+                            accumulator += postTemplate(post);
+                            return accumulator;
+                        }, "");
+                    document.querySelector(".posts").innerHTML = post_lists;
+                }
+            });
+        }
+
+        deletePost = (delete_button) => {
+            let id = delete_button.dataset.id;
+            if (!id) return;
+            fetchGraphQL(`mutation{ deletePost(id:${id}) }`, res => {
+                if (res && res.data && res.data.deletePost) {
+                    document.querySelector(`#post${id}`).remove();
+                }
+            });
+        }
+
+        postTemplate = (post) => {
+            return `
+                    <li id="post${post.id}">
+                        id: ${post.id}<br>
+                        title: ${post.title}
+                        <button data-id="${post.id}" onclick="deletePost(this);">삭제</button>
+                        <hr />
+                    </li>
+                    `
+        }
+
+
     </script>
 </body>
 
