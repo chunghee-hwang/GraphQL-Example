@@ -1,14 +1,7 @@
 package com.goodperson.graphql;
 
-import java.util.stream.Stream;
-
-import com.goodperson.graphql.model.Post;
-import com.goodperson.graphql.service.PostService;
-
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class GraphqlApplication {
